@@ -43,6 +43,21 @@ class Graph():
         for edge in self.graph[node]['neighbours']:
             if edge['strength'] / self.graph[node]['total_strength'] > threshold and edge['destination'] not in visited:
                 self.dfs(edge['destination'], visited, threshold)
+                
+    
+    def bfs(self, node: int, visited: set, threshold: float):
+        # Initialise variables
+        queue = [node]
+        
+        while queue:
+            # Get next node from queue
+            node = queue.pop(0)
+            visited.add(node)
+            
+            # Visit all neighbours of node
+            for edge in self.graph[node]['neighbours']:
+                if edge['strength'] / self.graph[node]['total_strength'] > threshold and edge['destination'] not in visited:
+                    queue.append(edge['destination'])
 
     
     def get_number_of_clusters(self, threshold: float = 0) -> int:
@@ -53,10 +68,23 @@ class Graph():
         # Visit all nodes in graph
         for node in self.graph:
             if node not in visited:
-                self.dfs(node, visited, threshold)
+                self.bfs(node, visited, threshold)
                 clusters += 1
                 
         return clusters
+    
+
+    def get_density(self) -> float:
+        # Initialise variables
+        total_edges = 0
+        total_nodes = len(self.graph)
+        
+        # Count total number of edges
+        for node in self.graph:
+            total_edges += len([1 for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0])
+        
+        return total_edges / (total_nodes * (total_nodes - 1))
+    
     
     def relationship_decay(self, decay_rate: float = 0.5) -> None:
         for node in self.graph:
@@ -65,9 +93,10 @@ class Graph():
                 
             self.graph[node]['total_strength'] *= decay_rate
     
+    
     def simulate_iteration(self, random_prob: float = 0):
         
-        for node in tqdm.tqdm(self.graph):
+        for node in tqdm.tqdm(self.graph, desc='Simulating iteration'):
             neighbours = [neighbour['destination'] for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0]
             
             choosen_neighbour = None
