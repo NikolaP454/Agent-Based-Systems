@@ -2,6 +2,7 @@ import tqdm as tqdm
 import pandas as pd
 import numpy as np
 
+from collections import deque
 
 class Graph():
     def __init__(self, edges_df: pd.DataFrame):
@@ -47,11 +48,11 @@ class Graph():
     
     def bfs(self, node: int, visited: set, threshold: float):
         # Initialise variables
-        queue = [node]
+        queue = deque().append(node)
         
-        while queue:
+        while not queue.empty():
             # Get next node from queue
-            node = queue.pop(0)
+            node = queue.popleft()
             visited.add(node)
             
             # Visit all neighbours of node
