@@ -108,8 +108,9 @@ class Graph():
     
     
     def simulate_iteration(self, random_prob: float = 0):
+        nodes = np.random.choice(self.graph, size=50000, replace=False)
         
-        for node in tqdm.tqdm(self.graph, desc='Simulating iteration'):
+        for node in tqdm.tqdm(nodes, desc='Simulating iteration'):
             neighbours = [neighbour['destination'] for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0]
             
             choosen_neighbour = None
