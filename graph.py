@@ -48,7 +48,7 @@ class Graph():
     
     def bfs(self, node: int, visited: set, threshold: float):
         # Initialise variables
-        queue = deque().append(node)
+        queue = deque([node])
         
         while not queue.empty():
             # Get next node from queue
