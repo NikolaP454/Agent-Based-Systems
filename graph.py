@@ -50,7 +50,7 @@ class Graph():
         # Initialise variables
         queue = deque([node])
         
-        while not queue.empty():
+        while len(queue) > 0:
             # Get next node from queue
             node = queue.popleft()
             visited.add(node)
