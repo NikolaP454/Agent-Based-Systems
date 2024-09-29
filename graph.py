@@ -8,7 +8,7 @@ class Graph():
         self.graph = {}
         self.all_authors = list(set(edges_df['author1']).union(set(edges_df['author2'])))
         
-        for i, row in edges_df.iterrows():
+        for i, row in tqdm.tqdm(edges_df.iterrows(), total=len(edges_df), desc='Building graph'):
             # Extract row information
             source = int(row['author1'])
             destination = int(row['author2'])
@@ -84,6 +84,17 @@ class Graph():
             total_edges += len([1 for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0])
         
         return total_edges / (total_nodes * (total_nodes - 1))
+    
+    
+    def get_number_of_neighbours(self) -> pd.DataFrame:
+        # Initialise variables
+        neighbours = []
+        
+        # Count number of neighbours for each node
+        for node in self.graph:
+            neighbours.append(len([1 for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0]))
+        
+        return pd.DataFrame(neighbours, columns=['number_of_neighbours']) 
     
     
     def relationship_decay(self, decay_rate: float = 0.5) -> None:
