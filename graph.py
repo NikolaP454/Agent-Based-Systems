@@ -49,15 +49,16 @@ class Graph():
     def bfs(self, node: int, visited: set, threshold: float):
         # Initialise variables
         queue = deque([node])
+        visited.add(node)
         
         while len(queue) > 0:
             # Get next node from queue
             node = queue.popleft()
-            visited.add(node)
             
             # Visit all neighbours of node
             for edge in self.graph[node]['neighbours']:
                 if edge['strength'] / self.graph[node]['total_strength'] > threshold and edge['destination'] not in visited:
+                    visited.add(edge['destination'])
                     queue.append(edge['destination'])
 
     
