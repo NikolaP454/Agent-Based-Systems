@@ -66,7 +66,7 @@ class Graph():
         clusters = 0
         
         # Visit all nodes in graph
-        for node in self.graph:
+        for node in tqdm.tqdm(self.graph, desc='Calculating number of clusters'):
             if node not in visited:
                 self.bfs(node, visited, threshold)
                 clusters += 1
@@ -80,7 +80,7 @@ class Graph():
         total_nodes = len(self.graph)
         
         # Count total number of edges
-        for node in self.graph:
+        for node in tqdm.tqdm(self.graph, desc='Calculating density'):
             total_edges += len([1 for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0])
         
         return total_edges / (total_nodes * (total_nodes - 1))
@@ -91,14 +91,14 @@ class Graph():
         neighbours = []
         
         # Count number of neighbours for each node
-        for node in self.graph:
+        for node in tqdm.tqdm(self.graph, desc='Calculating number of neighbours'):
             neighbours.append(len([1 for neighbour in self.graph[node]['neighbours'] if neighbour['strength'] > 0]))
         
         return pd.DataFrame(neighbours, columns=['number_of_neighbours']) 
     
     
     def relationship_decay(self, decay_rate: float = 0.5) -> None:
-        for node in self.graph:
+        for node in tqdm.tqdm(self.graph, desc='Decaying relationships'):
             for neighbour in self.graph[node]['neighbours']:
                 neighbour['strength'] *= decay_rate
                 
